@@ -9,54 +9,68 @@ package Tugas1;
 /**
  *
  * @author hanifnaufal
+ * @contributor aradeaks
  */
 public class SparseMatrix {
     Node[] matrixRow;
-    int n;        
+    int size;    
     
-
-        
-    public SparseMatrix(int n, double[][] value){
-        this.n = n;
-        matrixRow = new Node[n];
-        for (int i = 0; i < n; i++) {            
+    public SparseMatrix(int size, Node[] matrixRow){
+        this.size = size;
+        this.matrixRow=matrixRow;
+    }
+	
+    public SparseMatrix(int size){
+        this.size = size;
+        this.matrixRow=new Node[size];
+    }    
+            
+    public SparseMatrix(int size, double[][] value){
+        this.size = size;
+        matrixRow = new Node[size];
+        for (int i = 0; i < size; i++) {            
             //matrixRow[i] = new Node();
             Node itr = matrixRow[i];
-            for (int j = 0; j < n; j++) {
+            for (int j = 0; j < size; j++) {
                 if(value[i][j] != 0){
                     System.out.println(value[i][j]);
-                    Node x = new Node();
-                    x.col = j;
-                    x.value = value[i][j];
+                    Node newNode = new Node();
+                    newNode.col = j;
+                    newNode.value = value[i][j];
                     if (itr == null) {
-                        matrixRow[i] = x;
+                        matrixRow[i] = newNode;
                     } else {                                       
-                        itr.next = x;                        
+                        itr.next = newNode;                        
                     }                
-                    itr = x;   
+                    itr = newNode;   
                 }
             }
         }
     }
     
-    public SparseMatrix(int n, Node[] matrixRow){
-        this.n = n;
-        this.matrixRow=matrixRow;
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < matrixRow.length; i++) {
+            Node itr = matrixRow[i];
+            while(itr != null){
+                sb.append(itr.value).append(";").append(itr.col).append(" ");
+                itr = itr.next;
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
     }
-    public SparseMatrix(int n){
-        this.n = n;
-        this.matrixRow=new Node[n];
-    }
-    
+	
     // public SparseMatrix transpose(){
-    //     Node[] newMatrixCol = new Node[n];
-    //     Node[] newMatrixItr = new Node[n];
-    //     for (int i = 0; i < n; i++) {
+    //     Node[] newMatrixCol = new Node[size];
+    //     Node[] newMatrixItr = new Node[size];
+    //     for (int i = 0; i < size; i++) {
     //         newMatrixCol[i] = new Node(); 
     //         newMatrixItr[i] = newMatrixCol[i];
     //     }
         
-    //     for (int i = 0; i < n; i++) {
+    //     for (int i = 0; i < size; i++) {
     //         Node oldMatrixItr = matrixRow[i].next;            
     //         while(oldMatrixItr != null){             
     //             Node tmp = new Node();
@@ -69,23 +83,23 @@ public class SparseMatrix {
     //             oldMatrixItr = oldMatrixItr.next;
     //         }
     //     }        
-    //     return new SparseMatrix(n, newMatrixCol);
+    //     return new SparseMatrix(size, newMatrixCol);
     // }
     
     
     // public SparseMatrix multiply(SparseMatrix sm){
     //     SparseMatrix A = this;
     //     SparseMatrix B = sm.transpose();
-    //     SparseMatrix result = new SparseMatrix(A.n);
+    //     SparseMatrix result = new SparseMatrix(A.size);
         
-    //     for (int i = 0; i < A.n; i++) {
+    //     for (int i = 0; i < A.size; i++) {
     //         result.matrixRow[i] = new Node();
     //     }
         
-    //     for (int i = 0; i < A.n; i++) {                        
+    //     for (int i = 0; i < A.size; i++) {                        
     //         Node rItr = result.matrixRow[i];                     
             
-    //         for (int j = 0; j < B.n; j++) {
+    //         for (int j = 0; j < B.size; j++) {
     //             double sum = 0;
     //             Node aItr = A.matrixRow[i].next;
     //             Node bItr = B.matrixRow[j].next;                                                
@@ -114,22 +128,7 @@ public class SparseMatrix {
         
         
     //     return result;
-    // }
-    
-    
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < matrixRow.length; i++) {
-            Node itr = matrixRow[i];
-            while(itr != null){
-                sb.append(itr.value).append(";").append(itr.col).append(" ");
-                itr = itr.next;
-            }
-            sb.append("\n");
-        }
-        return sb.toString();
-    }        
+    // } 
 }
 
 class Node {

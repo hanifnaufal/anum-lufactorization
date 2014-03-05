@@ -24,30 +24,28 @@ public class SparseSolver {
     
     public double[] hitungLU(double[][] A, double[] b){
         init(A,b);
-        
         return this.b;
     }
     
     public SparseMatrix fowardElimination(){
-        int n = sm.n;
-        SparseMatrix L = new SparseMatrix(n);
-        Node[] lItr = new Node[n];
-        Node[] aItr = new Node[n];
-        for (int i = 0; i < n; i++) {
+        int size = sm.size;
+        SparseMatrix L = new SparseMatrix(size);
+        Node[] lItr = new Node[size];
+        Node[] aItr = new Node[size];
+        for (int i = 0; i < size; i++) {
             L.matrixRow[i] = new Node();
             lItr[i] = L.matrixRow[i];
             aItr[i] = sm.matrixRow[i];
         }
                         
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < size; i++) {
             Node itrTmpItoJ = null;
-            for (int j = i+1; j < n; j++) {
+            for (int j = i+1; j < size; j++) {
                 Node tmp = new Node();
                 tmp.col = aItr[j].col;
                 tmp.value = aItr[j].value/aItr[i].value;
                 lItr[j] = tmp;
-                
-                
+                                
                 //mbagi
                 Node aItrDivisor = aItr[i];
                 Node aItrNumerator = aItr[j];
@@ -76,13 +74,12 @@ public class SparseSolver {
             aItr[i] = itrTmpItoJ;
         }
         
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < size; i++) {
             Node identity = new Node();
             identity.value = 1;
             identity.col = i;
             lItr[i].next = identity;
-        }
-        
+        }        
         return L;
     }
     
