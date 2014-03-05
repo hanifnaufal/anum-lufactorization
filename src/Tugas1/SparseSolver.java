@@ -18,9 +18,6 @@ public class SparseSolver {
         this.sm = new SparseMatrix(b.length, A);
         this.b = b;
     }
-
-    public SparseSolver() {
-    }
     
     public double[] hitungLU(double[][] A, double[] b){
         init(A,b);
@@ -83,6 +80,20 @@ public class SparseSolver {
         return L;
     }
     
+	public SparseMatrix forwardSubstitutionPivot() throws Exception {
+		int size = sm.size;
+        SparseMatrix L = new SparseMatrix(size); //Matrix L
+		int[] P = new int[size]; //Matrix permutasi
+		for (int i = 0; i < size; i++) {
+			P[i] = i;
+            L.matrixRow[i] = new Node();
+        }
+		for (int kol = 0; kol < (size - 1); kol++) {
+			int maxRow = sm.searchMaxValueRow(kol);
+			if (maxRow == -1) throw new Exception("Singular Matrix!");
+		}
+		return L;
+	}
     
     public void backwardSubs(){
         

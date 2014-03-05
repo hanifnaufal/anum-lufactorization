@@ -16,8 +16,12 @@ public class Tugas1 {
 //        System.out.println(sm);
         SparseSolver ss = new SparseSolver();
         ss.init(new double[][]{{1,0,1},{2,2,3},{3,5,2}}, new double[]{1,2,3});
-        System.out.println(ss.fowardElimination());
-        System.out.println(ss.sm);
-        
+//        System.out.println(ss.fowardElimination());
+//        System.out.println(ss.sm);
+//		ss.init(new double[100][100], new double[100]);
+//		System.out.println(ss.forwardSubstitutionPivot());       
+		System.out.println(ss.sm.searchMaxValueRow(0)); 
+		System.out.println(ss.sm.searchMaxValueRow(1)); 
+		System.out.println(ss.sm.searchMaxValueRow(2));
     }
 }

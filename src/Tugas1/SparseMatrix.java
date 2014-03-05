@@ -33,7 +33,7 @@ public class SparseMatrix {
             Node itr = matrixRow[i];
             for (int j = 0; j < size; j++) {
                 if(value[i][j] != 0){
-                    System.out.println(value[i][j]);
+                    //System.out.println(value[i][j]);
                     Node newNode = new Node();
                     newNode.col = j;
                     newNode.value = value[i][j];
@@ -47,6 +47,24 @@ public class SparseMatrix {
             }
         }
     }
+	
+	public int searchMaxValueRow (int col) {
+		double max = Double.MIN_VALUE;
+		int row = -1;
+		for (int i = 0; i < size; i++) {
+			Node itr = matrixRow[i];
+			while (itr != null) {
+				if (itr.col == col && itr.value > max) {
+					row = i;
+					max = itr.value;
+					break;
+				}
+				itr = itr.next;
+			}
+		}
+		if (max == 0.0) return -1;
+		return row;
+	}
     
     @Override
     public String toString() {
