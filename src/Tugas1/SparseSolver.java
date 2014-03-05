@@ -84,13 +84,59 @@ public class SparseSolver {
 		int size = sm.size;
         SparseMatrix L = new SparseMatrix(size); //Matrix L
 		int[] P = new int[size]; //Matrix permutasi
+		Node[] lItr = new Node[size];
 		for (int i = 0; i < size; i++) {
 			P[i] = i;
             L.matrixRow[i] = new Node();
+            lItr[i] = L.matrixRow[i];
         }
+		
 		for (int kol = 0; kol < (size - 1); kol++) {
+			//Cari baris dengan nilai terbesar pada kolom [kol]
 			int maxRow = sm.searchMaxValueRow(kol);
 			if (maxRow == -1) throw new Exception("Singular Matrix!");
+			//Swap
+			P[kol] ^= P[maxRow];
+			P[maxRow] ^= P[kol];
+			P[kol] ^= P[maxRow];
+			Node tmp = sm.matrixRow[kol];
+			sm.matrixRow[kol] = sm.matrixRow[maxRow];
+			sm.matrixRow[maxRow] = tmp;
+			
+			//
+			for (int baris = kol + 1; baris < size; baris++) {
+				Node lIK = L.matrixRow[baris];
+				Node aIJ = sm.matrixRow[baris];
+				Node aKJ = sm.matrixRow[kol];
+				Node aKK = sm.matrixRow[kol];
+				if (aIJ.col == kol) {
+					while (aKK.col != kol) {
+						aKK = aKK.next;
+					}
+					Node nodeL = new Node();
+					nodeL.value = aIJ.value/aKK.value;
+					nodeL.col = sm.matrixRow[baris].col;
+					lIK = nodeL;
+				
+				//Terapkan rumus A(i,j) = A(i,j) - L(i,k)*A(k,j);
+					while(aIJ != null) {
+						if (aIJ.col == aKJ.col) {
+							aIJ.value = aIJ.value - nodeL.value*aKJ.value;
+							aIJ = aIJ.next;
+							aKJ = aKJ.next;
+						} else if (aIJ.col > aKJ.col) {
+							aIJ.value = (-nodeL.value*aKJ.value);
+							aKJ = aKJ.next;
+						} else {
+							aIJ = aIJ.next;
+						}
+					}
+				}
+			}
+			
+		}
+		for (int i = 0; i < lItr.length; i++) {
+			L.matrixRow[i] = sm.matrixRow[i];
 		}
 		return L;
 	}
