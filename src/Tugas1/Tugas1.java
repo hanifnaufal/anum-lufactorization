@@ -12,8 +12,8 @@ package Tugas1;
  */
 public class Tugas1 {
     public static void main(String... args){
-//        SparseMatrix sm = new SparseMatrix(3, new double[][]{{0,0,1},{1,2,3},{1,0,2}});
-//        System.out.println(sm.multiply(sm));
+//        SparseMatrix sm = new SparseMatrix(3, new double[][]{{1,2,1},{1,2,3},{1,0,2}});
+//        System.out.println(sm);
         SparseSolver ss = new SparseSolver();
         ss.init(new double[][]{{1,0,1},{2,2,3},{3,5,2}}, new double[]{1,2,3});
         System.out.println(ss.fowardElimination());

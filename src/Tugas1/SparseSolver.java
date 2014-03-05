@@ -34,9 +34,9 @@ public class SparseSolver {
         Node[] lItr = new Node[n];
         Node[] aItr = new Node[n];
         for (int i = 0; i < n; i++) {
-            L.matrixColumn[i] = new Node();            
-            lItr[i] = L.matrixColumn[i];
-            aItr[i] = sm.matrixColumn[i].next;
+            L.matrixRow[i] = new Node();
+            lItr[i] = L.matrixRow[i];
+            aItr[i] = sm.matrixRow[i];
         }
                         
         for (int i = 0; i < n; i++) {
@@ -45,14 +45,14 @@ public class SparseSolver {
                 Node tmp = new Node();
                 tmp.col = aItr[j].col;
                 tmp.value = aItr[j].value/aItr[i].value;
-                lItr[j].next = tmp;
+                lItr[j] = tmp;
                 
                 
                 //mbagi
                 Node aItrDivisor = aItr[i];
-                Node aItrNumerator = aItr[j];                
-                aItrNumerator.value = 0;
-                aItrNumerator = aItrNumerator.next;
+                Node aItrNumerator = aItr[j];
+                // aItrNumerator.value = 0;
+                // aItrNumerator = aItrNumerator.next;
                 aItrDivisor = aItrDivisor.next;
                 while(aItrDivisor != null){
                     if(aItrNumerator.col < aItrDivisor.col){
@@ -67,7 +67,7 @@ public class SparseSolver {
                     }
                 }
                 
-                lItr[j] = lItr[j].next;                
+                lItr[j] = lItr[j].next;            
                 aItr[j] = aItr[j].next;
                 
                 if(j == i+1)
