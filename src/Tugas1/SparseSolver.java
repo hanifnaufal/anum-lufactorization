@@ -87,7 +87,7 @@ public class SparseSolver {
 		Node[] lItr = new Node[size];
 		for (int i = 0; i < size; i++) {
 			P[i] = i;
-            L.matrixRow[i] = new Node();
+            //L.matrixRow[i] = new Node();
             lItr[i] = L.matrixRow[i];
         }
 		
@@ -103,20 +103,40 @@ public class SparseSolver {
 			sm.matrixRow[kol] = sm.matrixRow[maxRow];
 			sm.matrixRow[maxRow] = tmp;
 			
-			//
+			//memulai mencari nilai matrix L di bawah diagonal kolom ke-kol
 			for (int baris = kol + 1; baris < size; baris++) {
-				Node lIK = L.matrixRow[baris];
+				lItr[baris] = L.matrixRow[baris];
+//                                while (lItr[baris].col < kol) {
+//                                    if (lItr[baris].next == null) {
+//                                        Node newL = new Node();
+//                                        newL.col = kol;
+//                                        lItr[baris].next = newL;
+//                                    }
+//                                    lItr[baris] = lItr[baris].next;
+//                                }
 				Node aIJ = sm.matrixRow[baris];
 				Node aKJ = sm.matrixRow[kol];
 				Node aKK = sm.matrixRow[kol];
 				if (aIJ.col == kol) {
-					while (aKK.col != kol) {
+					while (aKK.col < kol) {
 						aKK = aKK.next;
 					}
 					Node nodeL = new Node();
 					nodeL.value = aIJ.value/aKK.value;
 					nodeL.col = sm.matrixRow[baris].col;
-					lIK = nodeL;
+                                        //dibawah ini masih aneh
+                                        if (lItr[baris] == null) {
+                                            L.matrixRow[baris] = nodeL;
+                                        } else {
+                                            while (lItr[baris].col < kol) {
+                                                lItr[baris] = lItr[baris].next;
+                                                if (lItr[baris].next == null) {
+                                                    break;
+                                                }
+                                            }
+                                            lItr[baris] = nodeL;
+                                        }
+                                        //diatas ini masih aneh
 				
 				//Terapkan rumus A(i,j) = A(i,j) - L(i,k)*A(k,j);
 					while(aIJ != null) {
@@ -135,11 +155,9 @@ public class SparseSolver {
 			}
 			
 		}
-		for (int i = 0; i < lItr.length; i++) {
-			L.matrixRow[i] = sm.matrixRow[i];
-		}
 		return L;
 	}
+                
     
     public void backwardSubs(){
         

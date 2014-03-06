@@ -16,8 +16,8 @@ public class Tugas1 {
 //        System.out.println(sm);
         SparseSolver ss = new SparseSolver();
         ss.init(new double[][]{{0,4,3},
-							   {1,3,1},
-							   {3,4,3}}, new double[]{1,2,3});
+                               {1,3,1},
+                               {3,4,3}}, new double[]{1,2,3});
 //        System.out.println(ss.fowardElimination());
 //        System.out.println(ss.sm);
 //		ss.init(new double[100][100], new double[100]);
