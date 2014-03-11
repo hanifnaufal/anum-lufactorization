@@ -24,6 +24,7 @@ public class SparseSolver {
         return this.b;
     }
     
+	//INCOMPLETE
     public SparseMatrix findMatrixL() throws Exception {
         int colSize = U.colSize;
         int[] per = new int[colSize];
@@ -40,20 +41,31 @@ public class SparseSolver {
             U.swapElement(maxRow, kol);
             L.insert(1.0);
             for (int baris = kol + 1; baris < colSize; baris++) {
-                double newL = U.getElement(baris, kol)/U.getElement(kol, kol);
-                L.insert(newL);
-                
+                double Lik = U.getElement(baris, kol)/U.getElement(kol, kol);
+                L.insert(Lik);
+                for (int k = kol; k < colSize; k++) {
+					double Akj = U.getElement(kol, k);
+					if (Akj == 0.0) continue;
+                    double Aij = U.getElement(baris, k) - Lik*Akj;
+                    if (Aij == 0.0) {
+                        U.removeElement(baris, k);
+                    } else {
+                        U.updateElement(baris, k, Aij);
+                    }
+                }
             }
         }
+        L.insert(1.0);
         return null;
     }
     
     public double[] forwardElimination() {
-
+		//TO-DO
         return null;
     }
     
     public double[] backwardSubstitution() {
+		//TO-DO
         return null;
     }
 }

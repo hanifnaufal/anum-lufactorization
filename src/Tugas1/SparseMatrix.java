@@ -60,14 +60,14 @@ public class SparseMatrix {
         return 0.0;
     }
     
-//    public int getIndex(int row, int col) {
-//        for (int i = P[col]; i < P[col+1]; i++) {
-//            if (I.get(i) == row) {
-//                return i;
-//            }
-//        }
-//        return -1;
-//    }
+   public int getIndex(int row, int col) {
+       for (int i = P[col]; i < P[col+1]; i++) {
+           if (I.get(i) == row) {
+               return i;
+           }
+       }
+       return -1;
+   }
     
     public int searchMaxRow(int col) {
         double max = Double.MIN_VALUE;
@@ -95,18 +95,6 @@ public class SparseMatrix {
         }
         //System.out.println(this);
     }
-    
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < colSize; i++) {
-            for (int j = 0; j < colSize; j++) {
-                sb.append(getElement(i,j)).append("; ");
-            }
-            sb.append("\n");
-        }
-        return sb.toString();
-    }
 
     private void hardcodeYeay() {
         for (int i = 0; i < colSize; i++) {
@@ -123,5 +111,58 @@ public class SparseMatrix {
     
     public void insert(double val) {
         X.add(val);
+    }
+
+    public void removeElement(int row, int col) {
+        for (int i = P[col]; i < P[col+1]; i++) {
+            if (I.get(i) == row) {
+                X.remove(i);
+                I.remove(i);
+                for (int j = col+1; j < P.length; j++) {
+                    P[j]--;
+                }
+            }
+        }
+    }
+
+    public void updateElement(int row, int col, double val) {
+        for (int i = P[col]; i < P[col+1]; i++) {
+            if (I.get(i) == row) {
+                X.set(i, val);
+				return;
+            }
+        }
+		//TO-DO
+		//Seandainya nilai awalnya 0, artinya tidak ada pada array I
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < colSize; i++) {
+            for (int j = 0; j < colSize; j++) {
+                sb.append(getElement(i,j)).append("; ");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+
+    public void printMatrices() {
+        System.out.print("P = ");
+        for (int p: P) {
+            System.out.print(p + "; ");
+        }
+        System.out.print("\nI = ");
+
+        for (Integer i : I) {
+            System.out.print(i.intValue() + "; ");
+        }
+        System.out.print("\nX = ");
+		
+		for (Double i : X) {
+            System.out.print(i.doubleValue() + "; ");
+        }
+        System.out.println("\n");
     }
 }
