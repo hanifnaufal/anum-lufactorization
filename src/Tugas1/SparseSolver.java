@@ -68,6 +68,8 @@ public class SparseSolver {
 
 	private void leftLooking() {
 		for (int j = 0; j < A.colSize; j++) {
+			SparseMatrix Aij = A.getColumn(j);
+			Aij.permute(P);
 			SparseMatrix y = forwardElimination(L, A.getColumn(j));
 			int maxRow = y.searchMaxRow(j);
 			if (maxRow != j) {
@@ -75,7 +77,7 @@ public class SparseSolver {
 				L.swapElement(j, maxRow, j);
 				P[j] ^= P[maxRow];
 				P[maxRow] ^= P[j];
-				P[j] ^= P[maxRow];            
+				P[j] ^= P[maxRow]; 
 			}			
 		}
 	}
