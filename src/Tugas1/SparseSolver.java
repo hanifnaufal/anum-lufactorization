@@ -11,11 +11,13 @@ package Tugas1;
 public class SparseSolver {
     SparseMatrix U;
     SparseMatrix L;
+    SparseMatrix A;
     double[] b;
     
     public void init(double[][] A, double[] b) {
-        this.U = new SparseMatrix(A);
-        this.L = new SparseMatrix(A.length);
+        this.A = new SparseMatrix(A);
+        this.U = SparseMatrix.zeros(A.length);
+        this.L = SparseMatrix.zeros(A.length);
         this.b = b;
     }
     
@@ -58,10 +60,16 @@ public class SparseSolver {
         L.insert(1.0);
         return null;
     }
+
+
+
+
+
+
     
-    public double[] forwardElimination() {
-		//TO-DO
-        return null;
+    public double[] forwardElimination(SparseMatrix L, SparseMatrix b) {
+
+        return ;
     }
     
     public double[] backwardSubstitution() {

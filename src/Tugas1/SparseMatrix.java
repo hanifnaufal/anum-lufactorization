@@ -11,11 +11,34 @@ import java.util.ArrayList;
  * @author Anum A07
  */
 public class SparseMatrix {
-    int colSize;
-    int[] P;
-    ArrayList<Integer> I;
-    ArrayList<Double> X;
-    
+    public int colSize;
+    public int[] P;
+    public ArrayList<Integer> I;
+    public ArrayList<Double> X;
+
+
+    /**
+     * fungsi untuk membuat Sparse Matrix identitas
+     * @param size panjang baris dan kolom matriks
+     * @return matriks indentitas
+     */
+    public static SparseMatrix eye(int size){
+        SparseMatrix result = new SparseMatrix(size);
+        for(int i = 0; i< size; i++){
+            result.P[i] = i;
+            result.I.add(i);
+            result.X.add(1.0);
+        }
+        result.P[size] = size;
+        return result;
+    }
+
+    public static SparseMatrix zeros(int size){
+        return new SparseMatrix(size);
+    }
+
+
+
     public SparseMatrix(double[][] A) {
         this.colSize = A[0].length;
         P = new int[colSize+1];
@@ -29,7 +52,7 @@ public class SparseMatrix {
         P = new int[colSize+1];
         I = new ArrayList<Integer>();
         X = new ArrayList<Double>();
-        hardcodeYeay();
+        //hardcodeYeay();
     }
     
     /**
@@ -141,7 +164,7 @@ public class SparseMatrix {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < colSize; i++) {
             for (int j = 0; j < colSize; j++) {
-                sb.append(getElement(i,j)).append("; ");
+                sb.append(String.format("%13g",getElement(i,j))).append(";");
             }
             sb.append("\n");
         }
