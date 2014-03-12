@@ -67,7 +67,7 @@ public class SparseSolver {
 
 
     
-    public double[] forwardElimination(SparseMatrix L, SparseMatrix b) {
+    public SparseMatrix forwardElimination(SparseMatrix L, SparseMatrix b) {
 
         return null;
     }

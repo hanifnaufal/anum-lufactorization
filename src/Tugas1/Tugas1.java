@@ -14,9 +14,11 @@ public class Tugas1 {
                         {2, 1, 0, 3},
                         {0, 5, 3, 0},
                         {1, 3, 3, 1}};
+        double[] b = {5, 6, 8, 8};
+
         SparseSolver ss = new SparseSolver();
-        ss.hitungLU(A, null);
-        ss.findMatrixL();
+        ss.hitungLU(A, b);
+        //ss.findMatrixL();
 		System.out.println(ss.U);
 		System.out.println(ss.L);
 //        SparseMatrix sm = new SparseMatrix(3);

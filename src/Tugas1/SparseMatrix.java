@@ -5,16 +5,18 @@
 package Tugas1;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author Anum A07
  */
 public class SparseMatrix {
+    public int rowSize;
     public int colSize;
     public int[] P;
-    public ArrayList<Integer> I;
-    public ArrayList<Double> X;
+    public List<Integer> I;
+    public List<Double> X;
 
 
     /**
@@ -47,13 +49,21 @@ public class SparseMatrix {
         createMatrix(A);
     }
     
-    public SparseMatrix(int colSize) {
-        this.colSize = colSize;
+    public SparseMatrix(int size) {
+        this.rowSize = this.colSize = size;
         P = new int[colSize+1];
         I = new ArrayList<Integer>();
         X = new ArrayList<Double>();
         //hardcodeYeay();
     }
+
+    public SparseMatrix(int rowSize, int colSize){
+        this.rowSize = rowSize; this.colSize = colSize;
+        P = new int[colSize+1];
+        I = new ArrayList<Integer>();
+        X = new ArrayList<Double>();
+    }
+
     
     /**
      * Membuat representasi sparse matriks dari matriks double[][]
@@ -83,6 +93,23 @@ public class SparseMatrix {
             }
         }
         return 0.0;
+    }
+
+    /**
+     * Mengambil satu kolom dalam suatu matriks, hasil I dan X method ini akan
+     * merefer SparseMatrix awal.
+     *
+     * @param col kolom yang akan diambil
+     * @return sebuah SparseMatrix yang berisi kolom yang diambil
+     */
+    public SparseMatrix getColumn(int col){
+        SparseMatrix result = new SparseMatrix(this.rowSize,1);
+        result.P[1] = this.P[col]-this.P[col+1];
+
+        result.I = this.I.subList(P[0],P[1]);
+        result.X = this.X.subList(P[0],P[1]);
+
+        return result;
     }
     
    public int getIndex(int row, int col) {
