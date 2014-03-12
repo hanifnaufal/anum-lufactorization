@@ -12,7 +12,6 @@ public class SparseSolver {
     SparseMatrix U;
     SparseMatrix L;
     SparseMatrix A;
-	int[] P;
     double[] b;
     
     public void init(double[][] A, double[] b) {
@@ -20,10 +19,6 @@ public class SparseSolver {
         this.U = SparseMatrix.zeros(A.length);
         this.L = SparseMatrix.zeros(A.length);
         this.b = b;
-		P = new int[A.length];
-		for (int i = 0; i < P.length; i++) {
-			P[i] = i;			
-		}
     }
     
     public double[] hitungLU(double[][] A, double[] b){
@@ -86,12 +81,12 @@ public class SparseSolver {
 
 
     
-    private double[] forwardElimination(SparseMatrix L, SparseMatrix b) {
+    public SparseMatrix forwardElimination(SparseMatrix L, SparseMatrix b) {
 
         return null;
     }
     
-    private double[] backwardSubstitution() {
+    public double[] backwardSubstitution() {
 		//TO-DO
         return null;
     }
