@@ -43,6 +43,7 @@ public class SparseMatrix {
 
     public SparseMatrix(double[][] A) {
         this.colSize = A[0].length;
+		this.rowSize = A.length;
         P = new int[colSize+1];
         I = new ArrayList<Integer>();
         X = new ArrayList<Double>();
@@ -147,6 +148,25 @@ public class SparseMatrix {
         swapElement(row1,row2,colSize);
     }
 
+	//TO-DO: searching for better permutation algorithm
+	public void permute(int[] pM) {
+		//for each element in permutation matrix
+		for (int k = 0; k < pM.length; k++) {
+			// for each column
+			for (int i = 0; i < colSize; i++) {
+				//for each available row
+				for (int j = P[i]; j < P[i+1]; j++) {
+					//search for idx that satisfy I[idx] = pM[k]
+					//set I in that idx to k
+					if (I.get(j) == pM[k]) {
+						I.set(j, k);
+						break;
+					}
+				}
+			}
+		}
+	}
+
     private void hardcodeYeay() {
         for (int i = 0; i < colSize; i++) {
             for (int j = i; j < colSize; j++) {
@@ -190,7 +210,7 @@ public class SparseMatrix {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < colSize; i++) {
+        for (int i = 0; i < rowSize; i++) {
             for (int j = 0; j < colSize; j++) {
                 sb.append(String.format("%10g",getElement(i,j))).append(";");
             }

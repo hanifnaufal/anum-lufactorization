@@ -15,13 +15,25 @@ public class Tugas1 {
                         {0, 5, 3, 0},
                         {1, 3, 3, 1}};
         double[] b = {5, 6, 8, 8};
+		double[][] B = {{1},
+                        {2},
+                        {3},
+                        {4}};
 
+		double[][] test = {{1, 2, 3},
+						   {4, 5, 6},
+						   {7, 8, 9}};
         SparseSolver ss = new SparseSolver();
-        ss.hitungLU(A, b);
+        ss.hitungLU(test, b);
         //ss.findMatrixL();
-		System.out.println(ss.U);
-		System.out.println(ss.L);
-//        SparseMatrix sm = new SparseMatrix(3);
+		ss.leftLooking();
+		//System.out.println(ss.U);
+		//System.out.println(ss.L);
+        //SparseMatrix sm = new SparseMatrix(test);
+		//int[] p = {3,1,0,2};
+		System.out.println("U = \n" + ss.U);
+		//sm.permute(p);
+		System.out.println("L = \n" + ss.L);
         //sm.swapElement(0, 3);
 //        sm.insert(1);
 //        sm.insert(3);
