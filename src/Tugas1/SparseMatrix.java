@@ -164,7 +164,7 @@ public class SparseMatrix {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < colSize; i++) {
             for (int j = 0; j < colSize; j++) {
-                sb.append(String.format("%13g",getElement(i,j))).append(";");
+                sb.append(String.format("%10g",getElement(i,j))).append(";");
             }
             sb.append("\n");
         }

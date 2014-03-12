@@ -69,7 +69,7 @@ public class SparseSolver {
     
     public double[] forwardElimination(SparseMatrix L, SparseMatrix b) {
 
-        return ;
+        return null;
     }
     
     public double[] backwardSubstitution() {
