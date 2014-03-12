@@ -71,7 +71,7 @@ public class SparseMatrix {
      */
     private void createMatrix(double[][] A) {
         int numItemAdded = 0;
-        for (int i = 0; i < A.length; i++) {
+        for (int i = 0; i < A[0].length; i++) {
             P[i] = numItemAdded;
             for (int j = 0; j < A.length; j++) {
                 if (A[j][i] != 0.0) {
