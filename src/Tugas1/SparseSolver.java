@@ -13,12 +13,17 @@ public class SparseSolver {
     SparseMatrix L;
     SparseMatrix A;
     double[] b;
+	int[] pM;
     
     public void init(double[][] A, double[] b) {
         this.A = new SparseMatrix(A);
         this.U = SparseMatrix.zeros(A.length);
         this.L = SparseMatrix.zeros(A.length);
         this.b = b;
+		pM = new int[A.length];
+		for (int i = 0; i < A.length; i++) {
+			pM[i] = i;
+		}
     }
     
     public double[] hitungLU(double[][] A, double[] b){
@@ -61,19 +66,51 @@ public class SparseSolver {
         return null;
     }
 
-	private void leftLooking() {
+	public void leftLooking() throws Exception {
 		for (int j = 0; j < A.colSize; j++) {
+			//insert diagonal
+			L.insert(1.0);
+			L.I.add(j);
+			L.P[j] = j;
+			
+			//get j-th column of A
 			SparseMatrix Aij = A.getColumn(j);
-			Aij.permute(P);
-			SparseMatrix y = forwardElimination(L, A.getColumn(j));
+			Aij.permute(pM);
+			
+			//solve Ly = Aj
+			SparseMatrix y = forwardElimination(L, Aij);
+			
+			//pivoting y
 			int maxRow = y.searchMaxRow(j);
+			if (maxRow == -1) throw new Exception("Singular Matrix!");
 			if (maxRow != j) {
+				//swap L, y, and P
 				y.swapElement(j, maxRow);
 				L.swapElement(j, maxRow, j);
-				P[j] ^= P[maxRow];
-				P[maxRow] ^= P[j];
-				P[j] ^= P[maxRow]; 
-			}			
+				pM[j] ^= pM[maxRow];
+				pM[maxRow] ^= pM[j];
+				pM[j] ^= pM[maxRow]; 
+			}
+			//insert to matrix U
+			for (int i = 0; i < j+1; i++) {
+				for (int k = U.P[j]; k < U.P[j+1]; k++) {
+					if (U.I.get(k) == i) {
+						U.insert(y.getElement(i, 0));
+						U.I.add(i);
+						U.P[j]++;
+					}
+				}
+			}
+			//insert to matrix L
+			for (int i = j + 1; i < A.colSize; i++) {
+				for (int k = L.P[j]; k < U.P[j+1]; k++) {
+					if (L.I.get(k) == i) {
+						L.insert(y.getElement(i, 0)/y.getElement(j, 0));
+						L.I.add(i);
+						L.P[j]++;
+					}
+				}
+			}
 		}
 	}
 
