@@ -73,6 +73,8 @@ public class SparseMatrix {
         }
         P[P.length-1] = numItemAdded;
     }
+
+
     
     public double getElement(int row, int col) {
         for (int i = P[col]; i < P[col+1]; i++) {
@@ -105,9 +107,9 @@ public class SparseMatrix {
         return row;
     }
     
-    public void swapElement(int row1, int row2) {
+    public void swapElement(int row1, int row2, int n) {
         //System.out.println(this);
-        for (int i = 0; i < colSize; i++) {
+        for (int i = 0; i < n; i++) {
             for (int j = P[i]; j < P[i+1]; j++) {
                 if (I.get(j) == row1) {
                     I.set(j, row2);
@@ -117,6 +119,10 @@ public class SparseMatrix {
             }
         }
         //System.out.println(this);
+    }
+
+    public void swapElement(int row1, int row2){
+        swapElement(row1,row2,colSize);
     }
 
     private void hardcodeYeay() {
@@ -179,12 +185,12 @@ public class SparseMatrix {
         System.out.print("\nI = ");
 
         for (Integer i : I) {
-            System.out.print(i.intValue() + "; ");
+            System.out.print(i + "; ");
         }
         System.out.print("\nX = ");
 		
 		for (Double i : X) {
-            System.out.print(i.doubleValue() + "; ");
+            System.out.print(i + "; ");
         }
         System.out.println("\n");
     }
