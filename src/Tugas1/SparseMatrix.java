@@ -95,20 +95,15 @@ public class SparseMatrix {
         return 0.0;
     }
 
-    /**
-     * Mengambil satu kolom dalam suatu matriks, hasil I dan X method ini akan
-     * merefer SparseMatrix awal.
-     *
-     * @param col kolom yang akan diambil
-     * @return sebuah SparseMatrix yang berisi kolom yang diambil
-     */
+
     public SparseMatrix getColumn(int col){
         SparseMatrix result = new SparseMatrix(this.rowSize,1);
         result.P[1] = this.P[col]-this.P[col+1];
 
-        result.I = this.I.subList(P[0],P[1]);
-        result.X = this.X.subList(P[0],P[1]);
-
+        for(int i = result.P[0]; i < result.P[1]; i++){
+            result.I.add(this.I.get(i));
+            result.X.add(this.X.get(i));
+        }
         return result;
     }
     
