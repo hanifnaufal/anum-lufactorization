@@ -101,7 +101,7 @@ public class SparseMatrix {
         SparseMatrix result = new SparseMatrix(this.rowSize,1);
         result.P[1] = this.P[col]-this.P[col+1];
 
-        for(int i = result.P[0]; i < result.P[1]; i++){
+        for(int i = this.P[col]; i < this.P[col+1]; i++){
             result.I.add(this.I.get(i));
             result.X.add(this.X.get(i));
         }

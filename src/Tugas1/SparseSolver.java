@@ -71,7 +71,7 @@ public class SparseSolver {
 			//insert diagonal
 			L.insert(1.0);
 			L.I.add(j);
-			L.P[j] = j;
+			L.P[j+1]++;
 			
 			//get j-th column of A
 			SparseMatrix Aij = A.getColumn(j);
@@ -119,8 +119,21 @@ public class SparseSolver {
 
     
     public SparseMatrix forwardElimination(SparseMatrix L, SparseMatrix b) {
-
-        return null;
+        SparseMatrix result = new SparseMatrix(b.rowSize, b.colSize);
+        for (int j = 0; j < result.colSize; j++) {
+            result.insert(b.getElement(0, j)/L.getElement(0, j));
+            result.I.add(0);
+			result.P[j+1]++;
+            for (int i = j+1; i < result.rowSize; i++) {
+                double Lij = L.getElement(i, j);
+                if (Math.abs(Lij) > 0.0) {
+                    result.insert(b.getElement(i,j)-Lij*b.getElement(i-1,j));
+                    result.I.add(i);
+                    result.P[j+1]++;
+                }
+            }
+        }
+        return result;
     }
     
     public double[] backwardSubstitution() {
