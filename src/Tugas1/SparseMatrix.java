@@ -40,7 +40,6 @@ public class SparseMatrix {
     }
 
 
-
     public SparseMatrix(double[][] A) {
         this.colSize = A[0].length;
 		this.rowSize = A.length;
@@ -99,7 +98,7 @@ public class SparseMatrix {
 
     public SparseMatrix getColumn(int col){
         SparseMatrix result = new SparseMatrix(this.rowSize,1);
-        result.P[1] = this.P[col]-this.P[col+1];
+        result.P[1] = this.P[col+1]-this.P[col];
 
         for(int i = this.P[col]; i < this.P[col+1]; i++){
             result.I.add(this.I.get(i));
@@ -120,7 +119,7 @@ public class SparseMatrix {
     public int searchMaxRow(int col) {
         double max = Double.MIN_VALUE;
         int row = -1;
-        for (int i = col; i < colSize; i++) {
+        for (int i = col; i < rowSize; i++) {
             double val = Math.abs(getElement(i, col));
             if (val > max && val > 0.0) {
                 max = val;

@@ -18,7 +18,7 @@ public class SparseSolver {
     public void init(double[][] A, double[] b) {
         this.A = new SparseMatrix(A);
         this.U = SparseMatrix.zeros(A.length);
-        this.L = SparseMatrix.zeros(A.length);
+        this.L = SparseMatrix.eye(A.length);
         this.b = b;
 		pM = new int[A.length];
 		for (int i = 0; i < A.length; i++) {
@@ -67,12 +67,7 @@ public class SparseSolver {
     }
 
 	public void leftLooking() throws Exception {
-		for (int j = 0; j < A.colSize; j++) {
-			//insert diagonal
-			L.insert(1.0);
-			L.I.add(j);
-			L.P[j+1]++;
-			
+		for (int j = 0; j < A.colSize; j++) {			
 			//get j-th column of A
 			SparseMatrix Aij = A.getColumn(j);
 			Aij.permute(pM);
@@ -81,12 +76,12 @@ public class SparseSolver {
 			SparseMatrix y = forwardElimination(L, Aij);
 			
 			//pivoting y
-			int maxRow = y.searchMaxRow(j);
+			int maxRow = y.searchMaxRow(0);
 			if (maxRow == -1) throw new Exception("Singular Matrix!");
 			if (maxRow != j) {
 				//swap L, y, and P
 				y.swapElement(j, maxRow);
-				L.swapElement(j, maxRow, j);
+                L.swapElement(j, maxRow, j);
 				pM[j] ^= pM[maxRow];
 				pM[maxRow] ^= pM[j];
 				pM[j] ^= pM[maxRow]; 
@@ -97,19 +92,21 @@ public class SparseSolver {
 					if (U.I.get(k) == i) {
 						U.insert(y.getElement(i, 0));
 						U.I.add(i);
-						U.P[j]++;
+						U.P[j+1]++;
 					}
 				}
 			}
 			//insert to matrix L
 			for (int i = j + 1; i < A.colSize; i++) {
-				for (int k = L.P[j]; k < U.P[j+1]; k++) {
-					if (L.I.get(k) == i) {
+                int n = 0;
+				for (int k = L.P[j]; k < L.P[j+1]; k++) {
+					//if (L.I.get(k) == i) {
 						L.insert(y.getElement(i, 0)/y.getElement(j, 0));
 						L.I.add(i);
-						L.P[j]++;
-					}
+						n++;
+					//}
 				}
+                L.P[j+1] += n;
 			}
 		}
 	}
@@ -126,11 +123,13 @@ public class SparseSolver {
 			result.P[j+1]++;
             for (int i = j+1; i < result.rowSize; i++) {
                 double Lij = L.getElement(i, j);
+                double res = b.getElement(i,j);
                 if (Math.abs(Lij) > 0.0) {
-                    result.insert(b.getElement(i,j)-Lij*b.getElement(i-1,j));
-                    result.I.add(i);
-                    result.P[j+1]++;
+                    res -= Lij*b.getElement(i-1,j);
                 }
+                result.insert(res);
+                result.I.add(i);
+                result.P[j+1]++;
             }
         }
         return result;
