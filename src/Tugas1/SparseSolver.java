@@ -110,28 +110,24 @@ public class SparseSolver {
 			}
 		}
 	}
-
-
-
-
-    
+	
     public SparseMatrix forwardElimination(SparseMatrix L, SparseMatrix b) {
         SparseMatrix result = new SparseMatrix(b.rowSize, b.colSize);
-        for (int j = 0; j < result.colSize; j++) {
-            result.insert(b.getElement(0, j)/L.getElement(0, j));
-            result.I.add(0);
-			result.P[j+1]++;
-            for (int i = j+1; i < result.rowSize; i++) {
-                double Lij = L.getElement(i, j);
-                double res = b.getElement(i,j);
-                if (Math.abs(Lij) > 0.0) {
-                    res -= Lij*b.getElement(i-1,j);
-                }
-                result.insert(res);
-                result.I.add(i);
-                result.P[j+1]++;
-            }
-        }
+		result.insert(b.getElement(0,0)/L.getElement(0,0));
+		result.I.add(0);
+		result.P[1]++;
+		for (int i = 1; i < L.rowSize; i++) {
+			double res = b.getElement(i,0);
+			for (int k = result.P[0]; k < result.P[1]; k++) {
+				double Lik = L.getElement(i,k);
+				if (Math.abs(Lik) > 0.0) {
+					res -= Lik*result.getElement(k,0);
+				}	
+			}
+			result.insert(res);
+			result.I.add(i);
+			result.P[1]++;	
+		}
         return result;
     }
     
