@@ -121,7 +121,7 @@ public class SparseMatrix {
         int maxRow = -1;
         for (int i = row; i < rowSize; i++) {
             double val = Math.abs(getElement(i, 0));
-            if (val > max && val > 0.0) {
+            if (val > max && val >= 0.0) {
                 max = val;
                 maxRow = i;
             }
@@ -157,7 +157,7 @@ public class SparseMatrix {
 				for (int j = P[i]; j < P[i+1]; j++) {
 					//search for idx that satisfy I[idx] = pM[k]
 					//set I in that idx to k
-					if (I.get(j) == pM[k]) {
+					if (j == pM[k]) {
 						I.set(j, k);
 						break;
 					}

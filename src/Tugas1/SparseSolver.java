@@ -77,8 +77,7 @@ public class SparseSolver {
 			
 			//pivoting y
 			int maxRow = y.searchMaxRow(j);
-			if (maxRow == -1) throw new Exception("Singular Matrix!");
-			if (maxRow != j) {
+			if (maxRow != j && maxRow >= 0) {
 				//swap L, y, and P
 				y.swapElement(j, maxRow);
                 L.swapElement(j, maxRow, j);
@@ -86,18 +85,18 @@ public class SparseSolver {
 				pM[maxRow] ^= pM[j];
 				pM[j] ^= pM[maxRow]; 
 			}
+			
 			//insert to matrix U
-			for (int i = 0; i < j+1; i++) {
-				for (int k = U.P[j]; k < U.P[j+1]; k++) {
-					if (U.I.get(k) == i) {
-						U.insert(y.getElement(i, 0));
-						U.I.add(i);
-						U.P[j+1]++;
-					}
-				}
-			}
-			//insert to matrix L
 			int n = 0;
+			for (int i = 0; i < j+1; i++, n++) {
+				U.insert(y.getElement(i, 0));
+				U.I.add(i);
+			}
+			for (int k = j+1; k < U.P.length; k++)
+				U.P[k] += n;
+			
+			//insert to matrix L
+			n = 0;
 			for (int k = L.P[j]+1, i = j+1; k < L.P[j]+L.colSize-j; k++, n++, i++) {
 					L.X.add(k, y.getElement(i, 0)/y.getElement(j, 0));
 					L.I.add(k, i);
@@ -120,6 +119,7 @@ public class SparseSolver {
 					res -= Lik*result.getElement(k,0);
 				}	
 			}
+			if (res < 1e-10) res = 0.0;
 			result.insert(res);
 			result.I.add(i);
 			result.P[1]++;	
@@ -131,4 +131,13 @@ public class SparseSolver {
 		//TO-DO
         return null;
     }
+	
+	public String printPermutationMatrix() {
+		String str = "P = [ ";
+		for(int i : pM) {
+			str += i + " ";
+		}
+		str += "]";
+		return str;
+	}
 }

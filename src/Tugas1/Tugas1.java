@@ -15,24 +15,24 @@ public class Tugas1 {
                         {0, 5, 0, 0},
                         {1, 0, 0, 1}};
         double[] b = {5, 6, 8, 8};
-		double[][] B = {{1},
-                        {2},
-                        {3},
-                        {4}};
+		double[][] B = {{3},
+                        {6},
+                        {9}};
 
 		double[][] test = {{1, 2, 3},
 						   {4, 5, 6},
 						   {7, 8, 9}};
         SparseSolver ss = new SparseSolver();
-        ss.hitungLU(A, b);
+        ss.hitungLU(test, b);
         //ss.findMatrixL();
 		ss.leftLooking();
-		//System.out.println(ss.U);
-		System.out.println(ss.L);
-        //SparseMatrix sm = new SparseMatrix(test);
-		//int[] p = {3,1,0,2};
+		System.out.println("U =\n" + ss.U);
+		System.out.println("L =\n" + ss.L);
+		System.out.println(ss.printPermutationMatrix());
+//        SparseMatrix sm = new SparseMatrix(B);
+//		int[] p = {2,0,1};
 		//System.out.println("U = \n" + ss.U);
-		//sm.permute(p);
+//		sm.permute(p);
 		//System.out.println("L = \n" + ss.L);
 //        double[][] I = {{1, 0, 0, 0},
 //                        {2, 1, 0, 0},
@@ -49,7 +49,7 @@ public class Tugas1 {
 //        sm.insert(1);
 //        sm.insert(3);
 //        sm.insert(1);
-//        System.out.println(sm.toString());
+//        System.out.println(sm);
 //		sm.printMatrices();
 //		sm.removeElement(1, 1);
 //        System.out.println(x);
