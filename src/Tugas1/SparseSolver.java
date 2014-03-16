@@ -76,7 +76,7 @@ public class SparseSolver {
 			SparseMatrix y = forwardElimination(L, Aij);
 			
 			//pivoting y
-			int maxRow = y.searchMaxRow(0);
+			int maxRow = y.searchMaxRow(j);
 			if (maxRow == -1) throw new Exception("Singular Matrix!");
 			if (maxRow != j) {
 				//swap L, y, and P
@@ -97,17 +97,13 @@ public class SparseSolver {
 				}
 			}
 			//insert to matrix L
-			for (int i = j + 1; i < A.colSize; i++) {
-                int n = 0;
-				for (int k = L.P[j]; k < L.P[j+1]; k++) {
-					//if (L.I.get(k) == i) {
-						L.insert(y.getElement(i, 0)/y.getElement(j, 0));
-						L.I.add(i);
-						n++;
-					//}
-				}
-                L.P[j+1] += n;
+			int n = 0;
+			for (int k = L.P[j]+1, i = j+1; k < L.P[j]+L.colSize-j; k++, n++, i++) {
+					L.X.add(k, y.getElement(i, 0)/y.getElement(j, 0));
+					L.I.add(k, i);
 			}
+			for (int k = j+1; k < L.P.length; k++)
+				L.P[k] += n;
 		}
 	}
 	

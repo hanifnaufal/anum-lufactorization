@@ -116,17 +116,17 @@ public class SparseMatrix {
        return -1;
    }
     
-    public int searchMaxRow(int col) {
+    public int searchMaxRow(int row) {
         double max = Double.MIN_VALUE;
-        int row = -1;
-        for (int i = col; i < rowSize; i++) {
-            double val = Math.abs(getElement(i, col));
+        int maxRow = -1;
+        for (int i = row; i < rowSize; i++) {
+            double val = Math.abs(getElement(i, 0));
             if (val > max && val > 0.0) {
                 max = val;
-                row = i;
+                maxRow = i;
             }
         }
-        return row;
+        return maxRow;
     }
     
     public void swapElement(int row1, int row2, int n) {
