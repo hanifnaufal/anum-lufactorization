@@ -175,19 +175,6 @@ public class SparseMatrix {
 		}
         I = newI;
 	}
-
-    private void hardcodeYeay() {
-        for (int i = 0; i < colSize; i++) {
-            for (int j = i; j < colSize; j++) {
-                I.add(j);
-            }
-        }
-        P[0] = 0;
-        for (int i = 1, kol = colSize, tmp = 0; kol > 0; kol--, i++) {
-            tmp += kol;
-            P[i] = tmp;
-        }
-    }
     
     public void insert(double val) {
         X.add(val);
@@ -240,23 +227,5 @@ public class SparseMatrix {
             for(int j=0; j<result[i].length; j++)
                 result[i][j] = getElement(i,j);
         return result;
-    }
-
-    public void printMatrices() {
-        System.out.print("P = ");
-        for (int p: P) {
-            System.out.print(p + "; ");
-        }
-        System.out.print("\nI = ");
-
-        for (Integer i : I) {
-            System.out.print(i + "; ");
-        }
-        System.out.print("\nX = ");
-		
-		for (Double i : X) {
-            System.out.print(i + "; ");
-        }
-        System.out.println("\n");
     }
 }
