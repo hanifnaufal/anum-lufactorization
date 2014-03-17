@@ -4,59 +4,71 @@
  */
 package Tugas1;
 
+import java.io.*;
+import java.util.StringTokenizer;
+
 /**
  *
  * @author fariz.ikhwantri
  */
 public class Tugas1 {
     public static void main(String[] args) throws Exception {
-        double[][] A = {{4, 0, 1, 0},
-                        {2, 1, 0, 3},
-                        {0, 5, 0, 0},
-                        {1, 0, 0, 1}};
-        double[] b = {5, 6, 8, 8};
-		double[][] B = {{3},
-                        {6},
-                        {9}};
+//        double[][] A = {{4, 0, 1, 0},
+//                        {2, 1, 0, 3},
+//                        {0, 5, 0, 0},
+//                        {1, 0, 0, 1}};
+//        double[] b = {5, 6, 8, 8};
+//		double[][] B = {{3},
+//                        {6},
+//                        {9}};
+//
+//		double[][] test = {{1, 2, 3},
+//						   {4, 5, 6},
+//						   {7, 8, 9}};
+//        SparseSolver ss = new SparseSolver();
+//        double[] x = ss.hitungLU(A, b);
+//		System.out.println("U =\n" + ss.U);
+//		System.out.println("L =\n" + ss.L);
+//        System.out.println("X =");
+//        for(double a:x){
+//            System.out.printf("%10.5g;",a);
+//        }
+//        System.out.println();
+//		System.out.println(ss.printPermutationMatrix());
 
-		double[][] test = {{1, 2, 3},
-						   {4, 5, 6},
-						   {7, 8, 9}};
+
+        BufferedReader reader= new BufferedReader(new FileReader(args[0]));
+        String tmp = reader.readLine();
+        StringTokenizer token = new StringTokenizer(reader.readLine(),",");
+        int n = token.countTokens();
+        double[][] A = new double[n][n];
+        int baris = 0;
+        while(tmp != null){
+            token = new StringTokenizer(reader.readLine(),",");
+            for(int i = 0; i<n;i++){
+                A[baris][i] = Double.parseDouble(token.nextToken());
+            }
+            baris++;
+            tmp = reader.readLine();
+        }
+
+        reader.close();
+        double b[] = new double[n];
+        reader= new BufferedReader(new FileReader(args[1]));
+        for(int i = 0; i < n; i++){
+            b[i] = Double.parseDouble(reader.readLine());
+        }
+        reader.close();
+
+
         SparseSolver ss = new SparseSolver();
         double[] x = ss.hitungLU(A, b);
-		System.out.println("U =\n" + ss.U);
-		System.out.println("L =\n" + ss.L);
-        System.out.println("X =");
-        for(double a:x){
-            System.out.printf("%10.5g;",a);
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter(args[2]));
+        for(int i = 0; i < n; i++){
+            writer.append(x[i] + "").append("\n");
         }
-        System.out.println();
-		System.out.println(ss.printPermutationMatrix());
-//        SparseMatrix sm = new SparseMatrix(B);
-//		int[] p = {2,0,1};
-		//System.out.println("U = \n" + ss.U);
-//		sm.permute(p);
-		//System.out.println("L = \n" + ss.L);
-//        double[][] I = {{1, 0, 0, 0},
-//                        {2, 1, 0, 0},
-//                        {1, 3, 1, 0},
-//						{3, 1, 6, 1}};
-//        SparseMatrix eye = new SparseMatrix(I);
-//        double[][] Z = {{2},{5},{3},{1}};
-//        SparseMatrix zSM = new SparseMatrix(Z);
-//        SparseMatrix x = ss.forwardElimination(eye, zSM);
-        //sm.swapElement(0, 3);
-//        sm.insert(1);
-//        sm.insert(3);
-//        sm.insert(3);
-//        sm.insert(1);
-//        sm.insert(3);
-//        sm.insert(1);
-//        System.out.println(sm);
-//		sm.printMatrices();
-//		sm.removeElement(1, 1);
-//        System.out.println(x);
-//		sm.printMatrices();
-        //sm.printAllArray();
+
+
     }
 }
