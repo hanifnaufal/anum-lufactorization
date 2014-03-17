@@ -116,14 +116,16 @@ public class SparseMatrix {
        return -1;
    }
     
-    public int searchMaxRow(int row) {
+    public int searchMaxRowOneColumn(int rowStart) {
         double max = Double.MIN_VALUE;
         int maxRow = -1;
-        for (int i = row; i < rowSize; i++) {
-            double val = Math.abs(getElement(i, 0));
-            if (val > max && val >= 0.0) {
-                max = val;
-                maxRow = i;
+        for (int i = P[0]; i < P[1]; i++) {
+            if(I.get(i) >= rowStart){
+                double val = Math.abs(X.get(i));
+                if (val > max) {
+                    max = val;
+                    maxRow = I.get(i);
+                }
             }
         }
         return maxRow;
@@ -150,6 +152,7 @@ public class SparseMatrix {
 	//TO-DO: searching for better permutation algorithm
 	public void permute(int[] pM) {
 		//for each element in permutation matrix
+        ArrayList<Integer> newI = new ArrayList<Integer>(I);
 		for (int k = 0; k < pM.length; k++) {
 			// for each column
 			for (int i = 0; i < colSize; i++) {
@@ -157,13 +160,13 @@ public class SparseMatrix {
 				for (int j = P[i]; j < P[i+1]; j++) {
 					//search for idx that satisfy I[idx] = pM[k]
 					//set I in that idx to k
-					if (j == pM[k]) {
-						I.set(j, k);
-						break;
+					if (I.get(j) == pM[k]) {
+						newI.set(j, k);
 					}
 				}
 			}
 		}
+        I = newI;
 	}
 
     private void hardcodeYeay() {
@@ -183,6 +186,7 @@ public class SparseMatrix {
         X.add(val);
     }
 
+
     public void removeElement(int row, int col) {
         for (int i = P[col]; i < P[col+1]; i++) {
             if (I.get(i) == row) {
@@ -195,15 +199,20 @@ public class SparseMatrix {
         }
     }
 
-    public void updateElement(int row, int col, double val) {
+    public void setElement(int row, int col, double val) {
+        if(Math.abs(val) < 1e-10){
+            removeElement(row,col);
+            return;
+        }
         for (int i = P[col]; i < P[col+1]; i++) {
             if (I.get(i) == row) {
                 X.set(i, val);
 				return;
             }
         }
-		//TO-DO
-		//Seandainya nilai awalnya 0, artinya tidak ada pada array I
+        I.add(P[col+1], row);
+        X.add(P[col+1], val);
+        for(int j = col+1; j< P.length; j++) P[j]++;
     }
     
     @Override
@@ -216,6 +225,14 @@ public class SparseMatrix {
             sb.append("\n");
         }
         return sb.toString();
+    }
+
+    public double[][] toDenseMatrix(){
+        double[][] result = new double[rowSize][colSize];
+        for (int i=0; i<result.length; i++)
+            for(int j=0; j<result[i].length; j++)
+                result[i][j] = getElement(i,j);
+        return result;
     }
 
     public void printMatrices() {

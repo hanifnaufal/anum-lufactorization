@@ -23,7 +23,7 @@ public class Tugas1 {
 						   {4, 5, 6},
 						   {7, 8, 9}};
         SparseSolver ss = new SparseSolver();
-        ss.hitungLU(test, b);
+        ss.hitungLU(A, b);
         //ss.findMatrixL();
 		ss.leftLooking();
 		System.out.println("U =\n" + ss.U);

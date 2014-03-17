@@ -40,7 +40,7 @@ public class SparseSolver {
         }
 
         for (int kol = 0; kol < colSize - 1; kol++) {
-            int maxRow = U.searchMaxRow(kol);
+            int maxRow = U.searchMaxRowOneColumn(kol);
             if (maxRow == -1) throw new Exception("Singular Matrix!");
             per[kol] ^= per[maxRow];
             per[maxRow] ^= per[kol];
@@ -57,7 +57,7 @@ public class SparseSolver {
                     if (Aij == 0.0) {
                         U.removeElement(baris, k);
                     } else {
-                        U.updateElement(baris, k, Aij);
+                        U.setElement(baris, k, Aij);
                     }
                 }
             }
@@ -76,8 +76,8 @@ public class SparseSolver {
 			SparseMatrix y = forwardElimination(L, Aij);
 			
 			//pivoting y
-			int maxRow = y.searchMaxRow(j);
-			if (maxRow != j && maxRow >= 0) {
+			int maxRow = y.searchMaxRowOneColumn(j);
+			if (maxRow != j && maxRow > -1) {
 				//swap L, y, and P
 				y.swapElement(j, maxRow);
                 L.swapElement(j, maxRow, j);
@@ -87,16 +87,11 @@ public class SparseSolver {
 			}
 			
 			//insert to matrix U
-			int n = 0;
-			for (int i = 0; i < j+1; i++, n++) {
-				U.insert(y.getElement(i, 0));
-				U.I.add(i);
-			}
-			for (int k = j+1; k < U.P.length; k++)
-				U.P[k] += n;
-			
+			for (int i = 0; i < j+1; i++) {
+				U.setElement(i, j, y.getElement(i, 0));
+            }
 			//insert to matrix L
-			n = 0;
+			int n = 0;
 			for (int k = L.P[j]+1, i = j+1; k < L.P[j]+L.colSize-j; k++, n++, i++) {
 					L.X.add(k, y.getElement(i, 0)/y.getElement(j, 0));
 					L.I.add(k, i);
@@ -107,29 +102,30 @@ public class SparseSolver {
 	}
 	
     public SparseMatrix forwardElimination(SparseMatrix L, SparseMatrix b) {
-        SparseMatrix result = new SparseMatrix(b.rowSize, b.colSize);
-		result.insert(b.getElement(0,0)/L.getElement(0,0));
-		result.I.add(0);
-		result.P[1]++;
-		for (int i = 1; i < L.rowSize; i++) {
-			double res = b.getElement(i,0);
-			for (int k = result.P[0]; k < result.P[1]; k++) {
-				double Lik = L.getElement(i,k);
-				if (Math.abs(Lik) > 0.0) {
-					res -= Lik*result.getElement(k,0);
-				}	
-			}
-			if (res < 1e-10) res = 0.0;
-			result.insert(res);
-			result.I.add(i);
-			result.P[1]++;	
-		}
-        return result;
+        SparseMatrix x = new SparseMatrix(b.rowSize, b.colSize);
+        for(int i=0; i<b.rowSize; i++){
+            x.setElement(i,0,b.getElement(i,0));
+        }
+        for(int i=0; i<L.colSize; i++){
+            x.setElement(i,0,x.getElement(i,0)/L.getElement(i,i));
+            for(int j=i+1; j<b.rowSize; j++){
+                x.setElement(j,0,x.getElement(j,0)-L.getElement(j,i)*x.getElement(i,0));
+            }
+        }
+        return x;
     }
     
-    public double[] backwardSubstitution() {
-		//TO-DO
+    public double[] backwardSubstitution(SparseMatrix U, SparseMatrix y) {
+		double [] x = new double[y.rowSize];
+
+        //for(int i=L.colSize - 1; i>=0; i++){
+        //    x.setElement(i,0,x.getElement(i,0)/U.getElement(i,i));
+        //    for(int j=i+1; j<y.rowSize; j++){
+        //        x.setElement(j,0,x.getElement(j,0)-U.getElement(j,i)*x.getElement(i,0));
+        //    }
+        //}
         return null;
+
     }
 	
 	public String printPermutationMatrix() {
