@@ -13,28 +13,26 @@ import java.util.StringTokenizer;
  */
 public class Tugas1 {
     public static void main(String[] args) throws Exception {
-        double[][] A = {{4, 0, 1, 0},
-                        {2, 1, 0, 3},
+        double[][] A = {{0, 0, 1, 0},
+                        {2, 0, 0, 3},
                         {0, 5, 0, 0},
-                        {1, 0, 0, 1}};
+                        {0, 0, 0, 1}};
         double[] b = {5, 6, 8, 8};
-//		double[][] B = {{3},
-//                        {6},
-//                        {9}};
-//
-//		double[][] test = {{1, 2, 3},
-//						   {4, 5, 6},
-//						   {7, 8, 9}};
+		
         SparseSolver ss = new SparseSolver();
         double[] x = ss.hitungLU(A, b);
 		System.out.println("U =\n" + ss.U);
 		System.out.println("L =\n" + ss.L);
-        System.out.println("X =");
+		System.out.println("P =");
+		for (int p : ss.pM) {
+			System.out.printf("%4d;",p);
+		}
+		System.out.println("\n");
+        System.out.println("x =");
         for(double a:x){
-            System.out.printf("%10.5g;",a);
+            System.out.printf("%10.5f;",a);
         }
         System.out.println();
-		//System.out.println(ss.printPermutationMatrix());
 
 
 //        BufferedReader reader= new BufferedReader(new FileReader(args[0]));

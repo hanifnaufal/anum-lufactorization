@@ -18,7 +18,6 @@ public class SparseMatrix {
     public List<Integer> I;
     public List<Double> X;
 
-
     /**
      * fungsi untuk membuat Sparse Matrix identitas
      * @param size panjang baris dan kolom matriks
@@ -38,7 +37,6 @@ public class SparseMatrix {
     public static SparseMatrix zeros(int size){
         return new SparseMatrix(size);
     }
-
 
     public SparseMatrix(double[][] A) {
         this.colSize = A[0].length;
@@ -70,7 +68,6 @@ public class SparseMatrix {
         I = new ArrayList<Integer>();
         X = new ArrayList<Double>();
     }
-
     
     /**
      * Membuat representasi sparse matriks dari matriks double[][]
@@ -90,8 +87,6 @@ public class SparseMatrix {
         }
         P[P.length-1] = numItemAdded;
     }
-
-
     
     public double getElement(int row, int col) {
         for (int i = P[col]; i < P[col+1]; i++) {
@@ -155,31 +150,19 @@ public class SparseMatrix {
     public void swapElement(int row1, int row2){
         swapElement(row1,row2,colSize);
     }
-
-	//TO-DO: searching for better permutation algorithm
+	
 	public void permute(int[] pM) {
-		//for each element in permutation matrix
-        ArrayList<Integer> newI = new ArrayList<Integer>(I);
 		int[] invpM = new int[pM.length];
-		for (int i = 0; i < pM.length; i++) invpM[pM[i]] = i;
-		//for (int k = 0; k < pM.length; k++) {
-		// for each column
-		for (int i = 0; i < colSize; i++) {
-			//for each available row
-			for (int j = P[i]; j < P[i+1]; j++) {
-				//search for idx that satisfy I[idx] = pM[k]
-				//set I in that idx to k
-					newI.set(j, invpM[I.get(j)]);
+		
+		for (int i = 0; i < pM.length; i++)
+			invpM[pM[i]] = i; //invpM => index = value, value = index
+		
+		for (int i = 0; i < colSize; i++) { // for each column
+			for (int j = P[i]; j < P[i+1]; j++) { //for each available row
+				I.set(j, invpM[I.get(j)]); //I[row] = inv[I[row]]
 			}
 		}
-		//}
-        I = newI;
 	}
-    
-    public void insert(double val) {
-        X.add(val);
-    }
-
 
     public void removeElement(int row, int col) {
         for (int i = P[col]; i < P[col+1]; i++) {
@@ -214,7 +197,7 @@ public class SparseMatrix {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < rowSize; i++) {
             for (int j = 0; j < colSize; j++) {
-                sb.append(String.format("%10.5g",getElement(i,j))).append(";");
+                sb.append(String.format("%10.5f",getElement(i,j))).append(";");
             }
             sb.append("\n");
         }
