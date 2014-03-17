@@ -48,6 +48,13 @@ public class SparseMatrix {
         X = new ArrayList<Double>();
         createMatrix(A);
     }
+
+    public SparseMatrix(double[] b){
+        this(b.length,1);
+        for (int i=0; i<b.length; i++){
+            setElement(i,0,b[i]);
+        }
+    }
     
     public SparseMatrix(int size) {
         this.rowSize = this.colSize = size;
@@ -220,7 +227,7 @@ public class SparseMatrix {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < rowSize; i++) {
             for (int j = 0; j < colSize; j++) {
-                sb.append(String.format("%10g",getElement(i,j))).append(";");
+                sb.append(String.format("%10.5g",getElement(i,j))).append(";");
             }
             sb.append("\n");
         }

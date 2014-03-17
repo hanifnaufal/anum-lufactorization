@@ -12,14 +12,14 @@ public class SparseSolver {
     SparseMatrix U;
     SparseMatrix L;
     SparseMatrix A;
-    double[] b;
+    SparseMatrix b;
 	int[] pM;
     
     public void init(double[][] A, double[] b) {
         this.A = new SparseMatrix(A);
         this.U = SparseMatrix.zeros(A.length);
         this.L = SparseMatrix.eye(A.length);
-        this.b = b;
+        this.b = new SparseMatrix(b);
 		pM = new int[A.length];
 		for (int i = 0; i < A.length; i++) {
 			pM[i] = i;
@@ -28,7 +28,11 @@ public class SparseSolver {
     
     public double[] hitungLU(double[][] A, double[] b){
         init(A,b);
-        return this.b;
+        leftLooking();
+        this.b.permute(pM);
+        SparseMatrix y = forwardElimination(L,this.b);
+        double[] x = backwardSubstitution(U,y);
+        return x;
     }
     
 	//INCOMPLETE
@@ -66,7 +70,7 @@ public class SparseSolver {
         return null;
     }
 
-	public void leftLooking() throws Exception {
+	public void leftLooking() {
 		for (int j = 0; j < A.colSize; j++) {			
 			//get j-th column of A
 			SparseMatrix Aij = A.getColumn(j);
@@ -116,15 +120,17 @@ public class SparseSolver {
     }
     
     public double[] backwardSubstitution(SparseMatrix U, SparseMatrix y) {
-		double [] x = new double[y.rowSize];
-
-        //for(int i=L.colSize - 1; i>=0; i++){
-        //    x.setElement(i,0,x.getElement(i,0)/U.getElement(i,i));
-        //    for(int j=i+1; j<y.rowSize; j++){
-        //        x.setElement(j,0,x.getElement(j,0)-U.getElement(j,i)*x.getElement(i,0));
-        //    }
-        //}
-        return null;
+        double[] x = new double[y.rowSize];
+        for(int i=0; i<y.rowSize; i++){
+            x[i]=y.getElement(i,0);
+        }
+        for(int i=U.colSize-1; i >= 0; i--){
+            x[i]= x[i] / U.getElement(i,i);
+            for(int j=i-1; j >= 0; j--){
+                x[j]=x[j] - U.getElement(j,i)*x[i];
+            }
+        }
+        return x;
 
     }
 	

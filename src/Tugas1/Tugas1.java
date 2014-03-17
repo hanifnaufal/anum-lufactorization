@@ -23,11 +23,14 @@ public class Tugas1 {
 						   {4, 5, 6},
 						   {7, 8, 9}};
         SparseSolver ss = new SparseSolver();
-        ss.hitungLU(A, b);
-        //ss.findMatrixL();
-		ss.leftLooking();
+        double[] x = ss.hitungLU(A, b);
 		System.out.println("U =\n" + ss.U);
 		System.out.println("L =\n" + ss.L);
+        System.out.println("X =");
+        for(double a:x){
+            System.out.printf("%10.5g;",a);
+        }
+        System.out.println();
 		System.out.println(ss.printPermutationMatrix());
 //        SparseMatrix sm = new SparseMatrix(B);
 //		int[] p = {2,0,1};
