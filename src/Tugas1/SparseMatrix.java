@@ -160,19 +160,19 @@ public class SparseMatrix {
 	public void permute(int[] pM) {
 		//for each element in permutation matrix
         ArrayList<Integer> newI = new ArrayList<Integer>(I);
-		for (int k = 0; k < pM.length; k++) {
-			// for each column
-			for (int i = 0; i < colSize; i++) {
-				//for each available row
-				for (int j = P[i]; j < P[i+1]; j++) {
-					//search for idx that satisfy I[idx] = pM[k]
-					//set I in that idx to k
-					if (I.get(j) == pM[k]) {
-						newI.set(j, k);
-					}
-				}
+		int[] invpM = new int[pM.length];
+		for (int i = 0; i < pM.length; i++) invpM[pM[i]] = i;
+		//for (int k = 0; k < pM.length; k++) {
+		// for each column
+		for (int i = 0; i < colSize; i++) {
+			//for each available row
+			for (int j = P[i]; j < P[i+1]; j++) {
+				//search for idx that satisfy I[idx] = pM[k]
+				//set I in that idx to k
+					newI.set(j, invpM[I.get(j)]);
 			}
 		}
+		//}
         I = newI;
 	}
     
