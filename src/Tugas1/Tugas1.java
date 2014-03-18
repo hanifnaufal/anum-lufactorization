@@ -62,7 +62,7 @@ public class Tugas1 {
         long time = System.nanoTime();
         SparseSolver ss = new SparseSolver();
         double[] x = ss.hitungLU(A, b);
-        System.out.print((System.nanoTime() - time)*1e-9);
+        System.out.println((System.nanoTime() - time)*1e-9);
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(args[2]));
         for(int i = 0; i < n; i++){
