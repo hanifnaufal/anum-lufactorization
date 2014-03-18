@@ -27,10 +27,10 @@ public class SparseSolver {
     }
     
     public double[] hitungLU(double[][] A, double[] b){
-        init(A,b);
+        init(A, b);
         leftLooking();
         this.b.permute(pM);
-        SparseMatrix y = forwardElimination(L,this.b);
+        SparseMatrix y = forwardElimination(L, this.b);
         double[] x = backwardSubstitution(U,y);
         return x;
     }
@@ -47,26 +47,22 @@ public class SparseSolver {
 			//pivoting y
 			int maxRow = y.searchMaxRowOneColumn(j);
 			if (maxRow != j && maxRow > -1) {
-				//swap L, y, and P
+				//swap L, y, and P 
 				y.swapElement(j, maxRow);
                 L.swapElement(j, maxRow, j);
-				pM[j] ^= pM[maxRow];
+                pM[j] ^= pM[maxRow];
 				pM[maxRow] ^= pM[j];
 				pM[j] ^= pM[maxRow]; 
 			}
 			
 			//insert to matrix U
-			for (int i = 0; i < j+1; i++) {
+			for (int i = 0; i <= j; i++) {
 				U.setElement(i, j, y.getElement(i, 0));
             }
 			//insert to matrix L
-			int n = 0;
-			for (int k = L.P[j]+1, i = j+1; k < L.P[j]+L.colSize-j; k++, n++, i++) {
-					L.X.add(k, y.getElement(i, 0)/y.getElement(j, 0));
-					L.I.add(k, i);
+			for (int i = j+1; i<A.colSize;i++) {
+					L.setElement(i, j, y.getElement(i, 0) / y.getElement(j, 0));
 			}
-			for (int k = j+1; k < L.P.length; k++)
-				L.P[k] += n;
 		}
 	}
 	

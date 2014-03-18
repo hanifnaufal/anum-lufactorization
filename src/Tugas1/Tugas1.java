@@ -39,20 +39,20 @@ public class Tugas1 {
 
         BufferedReader reader= new BufferedReader(new FileReader(args[0]));
         String tmp = reader.readLine();
-        StringTokenizer token = new StringTokenizer(reader.readLine(),",");
+        StringTokenizer token = new StringTokenizer(tmp,",");
         int n = token.countTokens();
         double[][] A = new double[n][n];
         int baris = 0;
         while(tmp != null){
-            token = new StringTokenizer(reader.readLine(),",");
+            token = new StringTokenizer(tmp,",");
             for(int i = 0; i<n;i++){
                 A[baris][i] = Double.parseDouble(token.nextToken());
             }
             baris++;
             tmp = reader.readLine();
         }
-
         reader.close();
+
         double b[] = new double[n];
         reader= new BufferedReader(new FileReader(args[1]));
         for(int i = 0; i < n; i++){
@@ -60,15 +60,16 @@ public class Tugas1 {
         }
         reader.close();
 
-
+        long time = System.nanoTime();
         SparseSolver ss = new SparseSolver();
         double[] x = ss.hitungLU(A, b);
+        System.out.print((System.nanoTime() - time)*1e-9);
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(args[2]));
         for(int i = 0; i < n; i++){
             writer.append(x[i] + "").append("\n");
         }
-
+        writer.close();
 
     }
 }
