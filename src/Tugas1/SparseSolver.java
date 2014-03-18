@@ -72,9 +72,10 @@ public class SparseSolver {
             x.setElement(i,0,b.getElement(i,0));
         }
         for(int i=0; i<L.colSize; i++){
-            x.setElement(i,0,x.getElement(i,0)/L.getElement(i,i));
+			double xi = x.getElement(i,0)/L.getElement(i,i);
+            x.setElement(i,0,xi);
             for(int j=i+1; j<b.rowSize; j++){
-                x.setElement(j,0,x.getElement(j,0)-L.getElement(j,i)*x.getElement(i,0));
+                x.setElement(j,0,x.getElement(j,0)-L.getElement(j,i)*xi);
             }
         }
         return x;
