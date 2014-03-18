@@ -23,19 +23,20 @@ public class TestSparseMatrix {
 
     @Test
     public void testForwardElimination(){
-        double[][] A = {{4, 0, 0, 0},
+        double[][] A = {{1, 0, 0, 0},
                         {2, 1, 0, 0},
-                        {0, 5, 2, 0},
+                        {0, 5, 1, 0},
                         {1, 3, 0, 1}};
-        double[][] B = {{8},{6},{14},{10}};
+        double[] B = {1,3,6,5};
         SparseMatrix a = new SparseMatrix(A);
         SparseMatrix b = new SparseMatrix(B);
 
         SparseSolver x = new SparseSolver();
+        x.init(A,B);
         SparseMatrix res = x.forwardElimination(a,b);
 
         for(int i=0; i<4; i++){
-            Assert.assertEquals("nilai indeks ke-"+i+" berbeda", 2.0, res.getElement(i,0), 0.000001);
+            Assert.assertEquals("nilai indeks ke-"+i+" berbeda", 1.0, res.getElement(i,0), 0.000001);
         }
     }
 

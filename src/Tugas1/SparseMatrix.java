@@ -101,11 +101,8 @@ public class SparseMatrix {
     public SparseMatrix getColumn(int col){
         SparseMatrix result = new SparseMatrix(this.rowSize,1);
         result.P[1] = this.P[col+1]-this.P[col];
-
-        for(int i = this.P[col]; i < this.P[col+1]; i++){
-            result.I.add(this.I.get(i));
-            result.X.add(this.X.get(i));
-        }
+        result.I = this.I.subList(this.P[col],this.P[col+1]);
+        result.X = this.X.subList(this.P[col],this.P[col+1]);
         return result;
     }
     
@@ -118,11 +115,12 @@ public class SparseMatrix {
        return -1;
    }
     
-    public int searchMaxRowOneColumn(int rowStart) {
+    public int searchMaxRowOneColumn(int rowStart, int[] invpM) {
         double max = Double.MIN_VALUE;
         int maxRow = -1;
+
         for (int i = P[0]; i < P[1]; i++) {
-            if(I.get(i) >= rowStart){
+            if(invpM[I.get(i)] >= rowStart){
                 double val = Math.abs(X.get(i));
                 if (val > max) {
                     max = val;
@@ -130,7 +128,7 @@ public class SparseMatrix {
                 }
             }
         }
-        return maxRow;
+        return (maxRow != -1) ? invpM[maxRow] : -1;
     }
     
     public void swapElement(int row1, int row2, int n) {
@@ -151,7 +149,7 @@ public class SparseMatrix {
         swapElement(row1,row2,colSize);
     }
 	
-	public void permute(int[] pM) {
+	public SparseMatrix permute(int[] pM) {
 		int[] invpM = new int[pM.length];
 		
 		for (int i = 0; i < pM.length; i++)
@@ -162,6 +160,7 @@ public class SparseMatrix {
 				I.set(j, invpM[I.get(j)]); //I[row] = inv[I[row]]
 			}
 		}
+        return this;
 	}
 
     public void removeElement(int row, int col) {

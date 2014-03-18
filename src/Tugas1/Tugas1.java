@@ -34,7 +34,6 @@ public class Tugas1 {
 //            System.out.printf("%10.5g;",a);
 //        }
 //        System.out.println();
-//		System.out.println(ss.printPermutationMatrix());
 
 
         BufferedReader reader= new BufferedReader(new FileReader(args[0]));
