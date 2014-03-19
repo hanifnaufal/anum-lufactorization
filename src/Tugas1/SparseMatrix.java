@@ -19,21 +19,10 @@ public class SparseMatrix {
     public List<Double> X;
 
     /**
-     * fungsi untuk membuat Sparse Matrix identitas
+     * fungsi untuk membuat Sparse Matrix berisi nilai nol
      * @param size panjang baris dan kolom matriks
-     * @return matriks indentitas
+     * @return matriks berisi nilai nol
      */
-    public static SparseMatrix eye(int size){
-        SparseMatrix result = new SparseMatrix(size);
-        for(int i = 0; i< size; i++){
-            result.P[i] = i;
-            result.I.add(i);
-            result.X.add(1.0);
-        }
-        result.P[size] = size;
-        return result;
-    }
-
     public static SparseMatrix zeros(int size){
         return new SparseMatrix(size);
     }
@@ -105,15 +94,7 @@ public class SparseMatrix {
         result.X = this.X.subList(this.P[col],this.P[col+1]);
         return result;
     }
-    
-   public int getIndex(int row, int col) {
-       for (int i = P[col]; i < P[col+1]; i++) {
-           if (I.get(i) == row) {
-               return i;
-           }
-       }
-       return -1;
-   }
+
     
     public int searchMaxRowOneColumn(int rowStart, int[] invpM) {
         double max = Double.MIN_VALUE;
@@ -129,24 +110,6 @@ public class SparseMatrix {
             }
         }
         return (maxRow != -1) ? invpM[maxRow] : -1;
-    }
-    
-    public void swapElement(int row1, int row2, int n) {
-        //System.out.println(this);
-        for (int i = 0; i < n; i++) {
-            for (int j = P[i]; j < P[i+1]; j++) {
-                if (I.get(j) == row1) {
-                    I.set(j, row2);
-                } else if (I.get(j) == row2) {
-                    I.set(j, row1);
-                }
-            }
-        }
-        //System.out.println(this);
-    }
-
-    public void swapElement(int row1, int row2){
-        swapElement(row1,row2,colSize);
     }
 	
 	public SparseMatrix permute(int[] pM) {

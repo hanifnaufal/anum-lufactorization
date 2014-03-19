@@ -41,36 +41,6 @@ public class TestSparseMatrix {
     }
 
     @Test
-    public void testSwapElement(){
-        double[][] A = {{4, 0, 1, 0},
-                {2, 1, 0, 3},
-                {0, 5, 0, 0},
-                {1, 0, 0, 1}};
-        double[][] Ares = {{2, 1, 0, 3},
-                {4, 0, 1, 0},
-                {0, 5, 0, 0},
-                {1, 0, 0, 1}};
-        SparseMatrix a = new SparseMatrix(A);
-        a.swapElement(0,1);
-        Assert.assertArrayEquals(Ares,a.toDenseMatrix());
-    }
-
-    @Test
-    public void testSwapElementOne(){
-        double[][] A = {{4, 0, 1, 0},
-                {2, 1, 0, 3},
-                {0, 5, 0, 0},
-                {1, 0, 0, 1}};
-        double[][] Ares = {{2, 0, 1, 0},
-                {4, 1, 0, 3},
-                {0, 5, 0, 0},
-                {1, 0, 0, 1}};
-        SparseMatrix a = new SparseMatrix(A);
-        a.swapElement(0,1,1);
-        Assert.assertArrayEquals(Ares,a.toDenseMatrix());
-    }
-
-    @Test
     public void testPermute(){
         double[][] A = {
                 {4, 0, 1, 0},

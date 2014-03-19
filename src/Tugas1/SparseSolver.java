@@ -5,7 +5,6 @@
 package Tugas1;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -38,7 +37,7 @@ public class SparseSolver {
         leftLooking();
         SparseMatrix y = forwardElimination(L, this.b);
         double[] x = backwardSubstitution(U,y);
-        L.permute(pM); //membenarkan L untuk dilihat
+        // L.permute(pM); //membenarkan L untuk dilihat
         return x;
     }
 
