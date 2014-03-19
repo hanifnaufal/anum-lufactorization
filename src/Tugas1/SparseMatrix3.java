@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author Anum A07
  */
-public class SparseMatrix {
+public class SparseMatrix3 {
 
     public int rowSize;
     public int colSize;
@@ -20,21 +20,27 @@ public class SparseMatrix {
     public List<Double> X;
 
     /**
-     * fungsi untuk membuat Sparse Matrix berisi nilai nol
+     * fungsi untuk membuat Sparse Matrix identitas
      *
      * @param size panjang baris dan kolom matriks
-     * @return matriks berisi nilai nol
+     * @return matriks indentitas
      */
-    public static SparseMatrix zeros(int size) {
-        return new SparseMatrix(size);
+    public static SparseMatrix3 eye(int size) {
+        SparseMatrix3 result = new SparseMatrix3(size);
+        for (int i = 0; i < size; i++) {
+            result.P[i] = i;
+            result.I.add(i);
+            result.X.add(1.0);
+        }
+        result.P[size] = size;
+        return result;
     }
 
-    /**
-     * Konstruktor Sparse Matrix
-     *
-     * @param A matriks dense
-     */
-    public SparseMatrix(double[][] A) {
+    public static SparseMatrix3 zeros(int size) {
+        return new SparseMatrix3(size);
+    }
+
+    public SparseMatrix3(double[][] A) {
         this.colSize = A[0].length;
         this.rowSize = A.length;
         P = new int[colSize + 1];
@@ -43,25 +49,14 @@ public class SparseMatrix {
         createMatrix(A);
     }
 
-    /**
-     * Konstruktor Sparse Matrix
-     *
-     * @param b matriks dense
-     */
-    public SparseMatrix(double[] b) {
+    public SparseMatrix3(double[] b) {
         this(b.length, 1);
         for (int i = 0; i < b.length; i++) {
             setElement(i, 0, b[i]);
         }
     }
 
-    /**
-     * Konstruktor Sparse Matrix Berfungsi untuk membuat Sparse Matrix size x
-     * size
-     *
-     * @param size ukuran matrix
-     */
-    public SparseMatrix(int size) {
+    public SparseMatrix3(int size) {
         this.rowSize = this.colSize = size;
         P = new int[colSize + 1];
         I = new ArrayList<Integer>();
@@ -69,14 +64,7 @@ public class SparseMatrix {
         //hardcodeYeay();
     }
 
-    /**
-     * Konstruktor Sparse Matrix Berfungsi untuk membuat Sparse Matrix ukuran
-     * rowSize x colSize
-     *
-     * @param rowSize ukuran baris pada matrix
-     * @param colSize ukuran kolom pada matrix
-     */
-    public SparseMatrix(int rowSize, int colSize) {
+    public SparseMatrix3(int rowSize, int colSize) {
         this.rowSize = rowSize;
         this.colSize = colSize;
         P = new int[colSize + 1];
@@ -85,9 +73,9 @@ public class SparseMatrix {
     }
 
     /**
-     * Membuat representasi sparse matriks dari matriks dense double[][]
+     * Membuat representasi sparse matriks dari matriks double[][]
      *
-     * @param A matrix dense double[][]
+     * @param A representasi double[][]
      */
     private void createMatrix(double[][] A) {
         int numItemAdded = 0;
@@ -104,13 +92,6 @@ public class SparseMatrix {
         P[P.length - 1] = numItemAdded;
     }
 
-    /**
-     * Mengambil nilai pada Sparse Matrix
-     *
-     * @param row index baris
-     * @param col index kolom
-     * @return nilai
-     */
     public double getElement(int row, int col) {
         for (int i = P[col]; i < P[col + 1]; i++) {
             if (I.get(i) == row) {
@@ -120,33 +101,31 @@ public class SparseMatrix {
         return 0.0;
     }
 
-    /**
-     * Mengambil matrix kolom dari Sparse Matrix
-     *
-     * @param col index kolom
-     * @return matrix kolom ke col
-     */
-    public SparseMatrix getColumn(int col) {
-        SparseMatrix result = new SparseMatrix(this.rowSize, 1);
+    public SparseMatrix3 getColumn(int col) {
+        SparseMatrix3 result = new SparseMatrix3(this.rowSize, 1);
         result.P[1] = this.P[col + 1] - this.P[col];
-        result.I = this.I.subList(this.P[col], this.P[col + 1]);
-        result.X = this.X.subList(this.P[col], this.P[col + 1]);
+
+        for (int i = this.P[col]; i < this.P[col + 1]; i++) {
+            result.I.add(this.I.get(i));
+            result.X.add(this.X.get(i));
+        }
         return result;
     }
 
-    /**
-     * Mencari nilai absolut terbesar dari satu kolom
-     *
-     * @param rowStart baris dimulainya pencarian
-     * @param invpM invers dari matrix permutasi
-     * @return index baris dimana nilai terbesar berada
-     */
-    public int searchMaxRowOneColumn(int rowStart, int[] invpM) {
+    public int getIndex(int row, int col) {
+        for (int i = P[col]; i < P[col + 1]; i++) {
+            if (I.get(i) == row) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public int searchMaxRowOneColumn(int rowStart) {
         double max = Double.MIN_VALUE;
         int maxRow = -1;
-
         for (int i = P[0]; i < P[1]; i++) {
-            if (invpM[I.get(i)] >= rowStart) {
+            if (I.get(i) >= rowStart) {
                 double val = Math.abs(X.get(i));
                 if (val > max) {
                     max = val;
@@ -154,15 +133,28 @@ public class SparseMatrix {
                 }
             }
         }
-        return (maxRow != -1) ? invpM[maxRow] : -1;
+        return maxRow;
     }
-    
-    /**
-     * Melakukan permutasi baris
-     * @param pM matrix permutasi
-     * @return Sparse Matrix yang sudah dipermutasi
-     */
-    public SparseMatrix permute(int[] pM) {
+
+    public void swapElement(int row1, int row2, int n) {
+        //System.out.println(this);
+        for (int i = 0; i < n; i++) {
+            for (int j = P[i]; j < P[i + 1]; j++) {
+                if (I.get(j) == row1) {
+                    I.set(j, row2);
+                } else if (I.get(j) == row2) {
+                    I.set(j, row1);
+                }
+            }
+        }
+        //System.out.println(this);
+    }
+
+    public void swapElement(int row1, int row2) {
+        swapElement(row1, row2, colSize);
+    }
+
+    public void permute(int[] pM) {
         int[] invpM = new int[pM.length];
 
         for (int i = 0; i < pM.length; i++) {
@@ -173,14 +165,8 @@ public class SparseMatrix {
                 I.set(j, invpM[I.get(j)]); //I[row] = inv[I[row]]
             }
         }
-        return this;
     }
 
-    /**
-     * Menghapus elemen pada Sparse Matrix
-     * @param row baris
-     * @param col kolom
-     */
     public void removeElement(int row, int col) {
         for (int i = P[col]; i < P[col + 1]; i++) {
             if (I.get(i) == row) {
@@ -193,12 +179,6 @@ public class SparseMatrix {
         }
     }
 
-    /**
-     * Melakukan modifikasi nilai pada salah satu elemen Sparse Matrix
-     * @param row baris
-     * @param col kolom
-     * @param val nilai baru
-     */
     public void setElement(int row, int col, double val) {
         if (Math.abs(val) < 1e-10) {
             removeElement(row, col);
@@ -229,10 +209,6 @@ public class SparseMatrix {
         return sb.toString();
     }
 
-    /**
-     * Melakukan konversi Sparse matrix menjadi dense matrix
-     * @return 
-     */
     public double[][] toDenseMatrix() {
         double[][] result = new double[rowSize][colSize];
         for (int i = 0; i < result.length; i++) {
